@@ -96,7 +96,7 @@ function moveCamera() {
 
         // Rotate the icon around the Y axis
         const axis = new THREE.Vector3(0, 1, 0);
-        const angle = Math.PI / 180; // Rotate 1 degree per frame
+        const angle = Math.PI / 360; // Rotate 1 degree per frame
         icon.scene.rotateOnAxis(axis, angle);
     }
 }
@@ -114,7 +114,7 @@ function addStar(){
     const [z] = Array(1).fill().map(() => THREE.MathUtils.randFloatSpread(25));
     
     star.position.set(x,y,z)
-  
+    
     scene.add(star);
 }
   
