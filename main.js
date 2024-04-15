@@ -9,34 +9,35 @@ window.addEventListener('load', () => {
     const loadingScreen = document.getElementById('loading-screen');
     loadingScreen.style.display = 'none';
 });
+window.addEventListener('click', onDocumentMouseClick, false);
+
 const scene = new THREE.Scene();
-
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.y = 4.0; // Set the camera position
-camera.position.z = 5.0; // Set the camera position
-
 const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector('#bg'),
 });
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-
 const loader = new GLTFLoader();
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-
 // const controls = new OrbitControls(camera, renderer.domElement);
-
 // Create lights and add them to the scene
-const pointLight = new THREE.PointLight(0xffffff, 15000);
-pointLight.position.set(5,50,50);
 const pointLight2 = new THREE.PointLight(0xffffff, 15000);
+const pointLight = new THREE.PointLight(0xffffff, 15000);
+
+pointLight.position.set(5,50,50);
 pointLight2.position.set(-50,10,1);
+camera.position.y = 4.0; // Set the camera position
+camera.position.z = 5.0; // Set the camera position
 scene.add(pointLight,pointLight2);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-
-
-window.addEventListener('click', onDocumentMouseClick, false);
+let spaceBoi;
+loader.load('./assets/space_boi/scene.gltf', (gltf) => {
+    spaceBoi = gltf;
+    spaceBoi.scene.scale.set(0.6, 0.6, 0.6); // Set the scale of the loaded model
+    scene.add(spaceBoi.scene);
+});
 
 let icon;
 loader.load('./assets/icon_folder/scene.gltf', (gltf) => {
@@ -67,13 +68,9 @@ function onDocumentMouseClick(event) {
     }
 }
 
-let spaceBoi;
-loader.load('./assets/space_boi/scene.gltf', (gltf) => {
-    spaceBoi = gltf;
-    spaceBoi.scene.scale.set(0.6, 0.6, 0.6); // Set the scale of the loaded model
-    scene.add(spaceBoi.scene);
-});
-
+/**
+ * Moves the camera around a circular path and updates the position of an icon.
+ */
 function moveCamera() {
     const t = document.body.getBoundingClientRect().top;
     const radius = 5.0; // Set the radius of the circle
@@ -122,7 +119,7 @@ Array(2500).fill().forEach(addStar);
 
 
 
-// Define the points for the curve
+// Define the points for the curve that the camera will follow
 const points = [
     new THREE.Vector3(0, 40, 0), // Initial position
     new THREE.Vector3(0, 25, 10), // Intermediate position
