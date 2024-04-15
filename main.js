@@ -10,7 +10,12 @@ window.addEventListener('load', () => {
     loadingScreen.style.display = 'none';
 });
 window.addEventListener('click', onDocumentMouseClick, false);
-
+window.addEventListener('click', () => {
+    if (sphereBall) {
+        // Increase the y velocity to lift the ball
+        velocity.y += 0.1;
+    }
+});
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({
@@ -23,6 +28,8 @@ const mouse = new THREE.Vector2();
 // Create lights and add them to the scene
 const pointLight2 = new THREE.PointLight(0xffffff, 15000);
 const pointLight = new THREE.PointLight(0xffffff, 15000);
+
+
 
 pointLight.position.set(5,50,50);
 pointLight2.position.set(-50,10,1);
@@ -46,6 +53,15 @@ loader.load('./assets/icon_folder/scene.gltf', (gltf) => {
     icon.scene.position.set(0, 0, 3.4); // Set the position of the icon
     scene.add(icon.scene);
 });
+// loading a sphere like ball
+let sphereBall;
+loader.load('./assets/temari_ball_2/scene.gltf', (gltf) => {
+    sphereBall = gltf;
+    sphereBall.scene.scale.set(0.29, 0.29, 0.29); // Set the scale of the icon
+    sphereBall.scene.position.set(0.3, 6, 1.7); // Set the position of the icon
+    scene.add(sphereBall.scene);
+});
+
 
 function onDocumentMouseClick(event) {
     event.preventDefault();
@@ -81,11 +97,13 @@ function moveCamera() {
     camera.position.x = x;
     camera.position.z = z;
     camera.lookAt(scene.position); // Make the camera look at the center of the scene
-
+}
+function moveIcon() {
     if (icon && progress >= 1.0) {
+        const t = document.body.getBoundingClientRect().top;
         // Calculate the new position of the icon
-        const iconX = 3.4 * Math.sin(t * 0.003); // Half the speed of the camera
-        const iconZ = 3.4 * Math.cos(t * 0.003); // Half the speed of the camera
+        const iconX = 3.4 * Math.sin(t * -0.003); // Half the speed of the camera
+        const iconZ = 3.4 * Math.cos(t * -0.003); // Half the speed of the camera
 
         // Update the position of the icon
         icon.scene.position.x = iconX;
@@ -97,8 +115,6 @@ function moveCamera() {
         icon.scene.rotateOnAxis(axis, angle);
     }
 }
-document.body.onscroll = moveCamera;
-moveCamera();
 
 // Function to add a star to the scene
 function addStar(){
@@ -117,7 +133,46 @@ function addStar(){
   
 Array(2500).fill().forEach(addStar);
 
+let velocity = new THREE.Vector3(0, 0, 0); // Initial velocity
+const gravity = new THREE.Vector3(0, -0.005, 0); // Gravity force
+const bounce = 0.8; // Bounce factor
+const friction = 0.99; // Friction factor
+const maxHeight = 2.0; // Maximum height of the bounce
+const rotationAxis = new THREE.Vector3(0, 0, 1);
+function moveSphereBall() {
+    if (sphereBall) {
+        const t = Date.now() * 0.001; // Use the current time to calculate the position
 
+        // Calculate the new position of the sphereBall
+        const sphereBallX = 1.7 * Math.sin(t);
+        const sphereBallZ = 1.7 * Math.cos(t);
+
+        // Update the position of the sphereBall
+        sphereBall.scene.position.x = sphereBallX;
+        sphereBall.scene.position.z = sphereBallZ;
+
+        // Update the velocity based on gravity
+        velocity.add(gravity);
+
+        // Update the y position based on the velocity
+        sphereBall.scene.position.y += velocity.y;
+
+        // If the sphereBall hits the ground, make it bounce and apply friction
+        if (sphereBall.scene.position.y < 0.6) {
+            sphereBall.scene.position.y = 0.6;
+            velocity.y *= -bounce;
+            velocity.multiplyScalar(friction);
+        }
+
+        // Scale the sphereBall based on its height
+        const scale = 0.29 + (maxHeight - sphereBall.scene.position.y) * 0.05;
+        sphereBall.scene.scale.set(scale, scale, scale);
+
+        // Rotate the sphereBall
+        const rotationSpeed = 0.066; // Adjust this value to change the speed of the rotation
+        sphereBall.scene.rotateOnAxis(rotationAxis, rotationSpeed);
+    }
+}
 
 // Define the points for the curve that the camera will follow
 const points = [
@@ -130,8 +185,6 @@ let progress = 0.0;
 // Create the curve
 const curve = new THREE.CatmullRomCurve3(points);
 
-
-
 // In your animate function, update the camera position based on the curve
 function animate() {
     requestAnimationFrame(animate);
@@ -139,13 +192,20 @@ function animate() {
     // If the animation is not finished, update the camera position
     if (progress < 1.0) {
         camera.position.copy(curve.getPoint(progress));
+        document.body.onscroll = moveSphereBall;
+        moveSphereBall();
         progress += 0.01; // Adjust this value to change the speed of the animation
     } else {
         // Once the animation is finished, call the moveCamera function on scroll
         document.body.onscroll = moveCamera;
+        document.body.onscroll = moveIcon;
+        document.body.onscroll = moveSphereBall;
         moveCamera();
+        moveSphereBall();
+        moveIcon();
     }
 
     renderer.render(scene, camera);
 }
+moveCamera();
 animate();
