@@ -29,8 +29,6 @@ const mouse = new THREE.Vector2();
 const pointLight2 = new THREE.PointLight(0xffffff, 15000);
 const pointLight = new THREE.PointLight(0xffffff, 15000);
 
-
-
 pointLight.position.set(5,50,50);
 pointLight2.position.set(-50,10,1);
 camera.position.y = 4.0; // Set the camera position
@@ -40,22 +38,21 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 let spaceBoi;
-loader.load('./assets/space_boi/scene.gltf', (gltf) => {
-    spaceBoi = gltf;
+loader.load('/repo/assets/space_boi/scene.gltf', (gltf) => {     spaceBoi = gltf;
     spaceBoi.scene.scale.set(0.6, 0.6, 0.6); // Set the scale of the loaded model
     scene.add(spaceBoi.scene);
 });
 
 let icon;
-loader.load('./assets/icon_folder/scene.gltf', (gltf) => {
-    icon = gltf;
-    icon.scene.scale.set(0.006, 0.006, 0.006); // Set the scale of the icon
+loader.load('/repo/assets/icon_folder/scene.gltf', (gltf) => { 
+icon = gltf;
+icon.scene.scale.set(0.006, 0.006, 0.006); // Set the scale of the icon
     icon.scene.position.set(0, 0, 3.4); // Set the position of the icon
     scene.add(icon.scene);
 });
 // loading a sphere like ball
 let sphereBall;
-loader.load('./assets/temari_ball_2/scene.gltf', (gltf) => {
+loader.load('/repo/assets/temari_ball_2/scene.gltf', (gltf) => {
     sphereBall = gltf;
     sphereBall.scene.scale.set(0.29, 0.29, 0.29); // Set the scale of the icon
     sphereBall.scene.position.set(0.3, 6, 1.7); // Set the position of the icon
