@@ -38,18 +38,17 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 let spaceBoi;
-loader.load('./assets/space_boi/scene.gltf', (gltf) => {
+loader.load('/assets/space_boi/scene.gltf', (gltf) => {
     spaceBoi = gltf;
     spaceBoi.scene.scale.set(0.6, 0.6, 0.6); // Set the scale of the loaded model
     scene.add(spaceBoi.scene);
 });
 
 let icon;
-loader.load('./assets/icon_folder/scene.gltf', (gltf) => {
-icon = gltf;
-icon.scene.scale.set(0.006, 0.006, 0.006); // Set the scale of the icon
+loader.load('/assets/icon_folder/scene.gltf', (gltf) => {
+    icon = gltf;
+    icon.scene.scale.set(0.006, 0.006, 0.006); // Set the scale of the icon
     icon.scene.position.set(0, 0, 3.4); // Set the position of the icon
-    scene.add(icon.scene);
 });
 // loading a sphere like ball
 let sphereBall;
