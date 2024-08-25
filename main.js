@@ -38,23 +38,23 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 
-const downloadUrl = new URL('./public/models/space_boi.glb', import.meta.url);
+
 let spaceBoi;
-loader.load(downloadUrl+"/", function(gltf) {
+loader.load('space_boi/space_boi.gltf', (gltf) => {
     spaceBoi = gltf;
     spaceBoi.scene.scale.set(0.6, 0.6, 0.6); // Set the scale of the loaded model
     scene.add(spaceBoi.scene);
 });
 
 let icon;
-loader.load('/public/models/icon_folder.gltf', (gltf) => {
+loader.load('icon_folder/icon_folder.gltf', (gltf) => {
     icon = gltf;
     icon.scene.scale.set(0.006, 0.006, 0.006); // Set the scale of the icon
     icon.scene.position.set(0, 0, 3.4); // Set the position of the icon
 });
 // loading a sphere like ball
 let sphereBall;
-loader.load('/public/models/temari_ball_2.gltf', (gltf) => {
+loader.load('temari_ball_2/temari_ball_2.gltf', (gltf) => {
     sphereBall = gltf;
     sphereBall.scene.scale.set(0.29, 0.29, 0.29); // Set the scale of the icon
     sphereBall.scene.position.set(0.3, 6, 1.7); // Set the position of the icon
