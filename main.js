@@ -37,8 +37,10 @@ scene.add(pointLight,pointLight2);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+
+const downloadUrl = new URL('./public/models/space_boi.glb', import.meta.url);
 let spaceBoi;
-loader.load('/public/models/space_boi.gltf', (gltf) => {
+loader.load(downloadUrl+"/", function(gltf) {
     spaceBoi = gltf;
     spaceBoi.scene.scale.set(0.6, 0.6, 0.6); // Set the scale of the loaded model
     scene.add(spaceBoi.scene);
