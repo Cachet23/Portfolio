@@ -68,6 +68,7 @@ canvas {
     grid-column: 2 / span 10;
     margin-top: var(--spacing);
     margin-bottom: var(--spacing);
+    
   }
 
   blockquote p {
@@ -75,7 +76,7 @@ canvas {
     background-color: white;
     font-size: 4rem;
     display: inline;
-    line-height: 1;
+    line-height: 1.13;
   }
 
   .left {
